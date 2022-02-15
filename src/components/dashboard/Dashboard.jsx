@@ -38,8 +38,6 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -51,9 +49,9 @@ const Drawer = styled(MuiDrawer, {
   shouldForwardProp: prop => prop !== 'open',
 })(({ theme, open }) => ({
   '& .MuiDrawer-paper': {
-    position: 'relative',
+    position: 'absolute',
     whiteSpace: 'nowrap',
-    width: drawerWidth,
+    width: 0,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -65,10 +63,7 @@ const Drawer = styled(MuiDrawer, {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
-      width: theme.spacing(7),
-      [theme.breakpoints.up('sm')]: {
-        width: theme.spacing(9),
-      },
+      width: drawerWidth,
     }),
   },
 }));
@@ -108,7 +103,6 @@ function DashboardContent() {
               onClick={toggleDrawer}
               sx={{
                 marginRight: '36px',
-                ...(open && { display: 'none' }),
               }}
             >
               <MenuIcon />
@@ -139,7 +133,7 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            <MainListItems isOpen={open} />
+            <MainListItems isOpen={open} toggleDrawer={toggleDrawer} />
           </List>
         </Drawer>
         <Box

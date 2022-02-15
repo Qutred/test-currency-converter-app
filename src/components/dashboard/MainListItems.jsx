@@ -11,18 +11,18 @@ import { Routes, Route, Link } from 'react-router-dom';
 const useStyles = makeStyles({
   listIcon: {
     minWidth: '30px !important',
-    marginRight: props => (props.isOpen ? 5 : 25),
   },
 });
 
 const linkStyle = {};
 export const MainListItems = props => {
   const classes = useStyles(props);
+  const toggleDrawer = props.toggleDrawer;
 
   return (
     <React.Fragment>
       <Link to="/settings" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <ListItemButton>
+        <ListItemButton onClick={toggleDrawer}>
           <ListItemIcon className={classes.listIcon}>
             <SettingsIcon />
           </ListItemIcon>
@@ -30,7 +30,7 @@ export const MainListItems = props => {
         </ListItemButton>
       </Link>
       <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <ListItemButton>
+        <ListItemButton onClick={toggleDrawer}>
           <ListItemIcon className={classes.listIcon}>
             <TrendingUpIcon />
           </ListItemIcon>
@@ -41,7 +41,7 @@ export const MainListItems = props => {
         to="/currencyConverter"
         style={{ textDecoration: 'none', color: 'inherit' }}
       >
-        <ListItemButton>
+        <ListItemButton onClick={toggleDrawer}>
           <ListItemIcon className={classes.listIcon}>
             <CurrencyExchangeIcon />
           </ListItemIcon>
