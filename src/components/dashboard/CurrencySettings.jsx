@@ -32,7 +32,7 @@ const CurrencySettings = () => {
 
   return (
     <Card sx={{ padding: '2rem' }}>
-      <Title>Your current base currency is:</Title>
+      <Title>Your current base currency is: {baseCurrency}</Title>
       <ContentInfo
         sx={{
           display: 'flex',
