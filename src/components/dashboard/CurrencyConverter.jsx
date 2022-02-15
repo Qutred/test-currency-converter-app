@@ -1,7 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Card from '@mui/material/Card';
 import { Typography } from '@mui/material';
-import Divider from '@mui/material/Divider';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -10,11 +9,12 @@ import { styled } from '@material-ui/styles';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useBaseCurrency } from './../../store/slices/baseCurrencySlice';
 import { useSupportedSymbols } from './../../store/slices/supportedSymbolsSlice';
 import CircularProgress from '@mui/material/CircularProgress';
 import { convert } from './../../api/currencyApi';
+import Title from './Title';
 
 const ContentInfo = styled('div')({
   display: 'flex',
@@ -37,8 +37,6 @@ const CurrencyConverter = () => {
     error: '',
   });
   const [convertResult, setConvertResult] = useState(null);
-
-  const dispatch = useDispatch();
 
   const handleConvert = async () => {
     if (
@@ -89,7 +87,7 @@ const CurrencyConverter = () => {
     }
 
     if (name === 'from' || name === 'to') {
-      errorMessage = value === '' ? 'Please Choose some succency' : '';
+      errorMessage = value === '' ? 'Please Choose some currency' : '';
     }
 
     setFormData(prevFormData => ({
@@ -105,15 +103,7 @@ const CurrencyConverter = () => {
   return (
     Object.keys(supportedSymbols).length > 0 && (
       <Card sx={{ padding: '2rem' }}>
-        <Typography
-          variant="h5"
-          gutterBottom
-          align="center"
-          sx={{ color: 'primary.main', fontWeight: '700' }}
-        >
-          Currency converter
-        </Typography>
-        <Divider light />
+        <Title>Currency converter</Title>
         <ContentInfo>
           <FormControl>
             <TextField

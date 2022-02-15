@@ -5,25 +5,16 @@ import ListItemText from '@mui/material/ListItemText';
 import SettingsIcon from '@mui/icons-material/Settings';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
-import { makeStyles } from '@mui/styles';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles({
-  listIcon: {
-    minWidth: '30px !important',
-  },
-});
-
-const linkStyle = {};
 export const MainListItems = props => {
-  const classes = useStyles(props);
   const toggleDrawer = props.toggleDrawer;
 
   return (
     <React.Fragment>
       <Link to="/settings" style={{ textDecoration: 'none', color: 'inherit' }}>
         <ListItemButton onClick={toggleDrawer}>
-          <ListItemIcon className={classes.listIcon}>
+          <ListItemIcon sx={{ minWidth: '30px' }}>
             <SettingsIcon />
           </ListItemIcon>
           <ListItemText primary="Change base currency" />
@@ -31,7 +22,7 @@ export const MainListItems = props => {
       </Link>
       <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
         <ListItemButton onClick={toggleDrawer}>
-          <ListItemIcon className={classes.listIcon}>
+          <ListItemIcon sx={{ minWidth: '30px' }}>
             <TrendingUpIcon />
           </ListItemIcon>
           <ListItemText primary="Сurrent exchange rates" />
@@ -42,7 +33,7 @@ export const MainListItems = props => {
         style={{ textDecoration: 'none', color: 'inherit' }}
       >
         <ListItemButton onClick={toggleDrawer}>
-          <ListItemIcon className={classes.listIcon}>
+          <ListItemIcon sx={{ minWidth: '30px' }}>
             <CurrencyExchangeIcon />
           </ListItemIcon>
           <ListItemText primary="Сurrency converter" />

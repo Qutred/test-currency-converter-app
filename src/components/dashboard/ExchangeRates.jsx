@@ -1,12 +1,6 @@
 import React, { useEffect } from 'react';
 import Card from '@mui/material/Card';
 import { Typography } from '@mui/material';
-import Divider from '@mui/material/Divider';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
 import { styled } from '@material-ui/styles';
 import { Link } from 'react-router-dom';
 import Table from '@mui/material/Table';
@@ -25,6 +19,7 @@ import {
 } from './../../store/slices/rateSlice.js';
 import { useSupportedSymbols } from '../../store/slices/supportedSymbolsSlice';
 import CircularProgress from '@mui/material/CircularProgress';
+import Title from './Title';
 
 const ContentInfo = styled('div')({
   display: 'flex',
@@ -50,15 +45,7 @@ const ExchangeRates = () => {
   return (
     <>
       <Card sx={{ padding: '2rem' }}>
-        <Typography
-          variant="h5"
-          gutterBottom
-          align="center"
-          sx={{ color: 'primary.main', fontWeight: '700' }}
-        >
-          Exchange rates
-        </Typography>
-        <Divider light />
+        <Title>Exchange rates</Title>
         <ContentInfo>
           <Typography align="center" variant="body1" sx={{ fontWeight: 700 }}>
             Selling 1 {baseCurrency} you will get

@@ -1,7 +1,6 @@
 import React from 'react';
 import Card from '@mui/material/Card';
 import { Typography } from '@mui/material';
-import Divider from '@mui/material/Divider';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -13,6 +12,7 @@ import {
   useBaseCurrency,
 } from './../../store/slices/baseCurrencySlice';
 import { useSupportedSymbols } from '../../store/slices/supportedSymbolsSlice';
+import Title from './Title';
 
 const ContentInfo = styled('div')({
   display: 'flex',
@@ -32,15 +32,7 @@ const CurrencySettings = () => {
 
   return (
     <Card sx={{ padding: '2rem' }}>
-      <Typography
-        variant="h5"
-        gutterBottom
-        align="center"
-        sx={{ color: 'primary.main', fontWeight: '700' }}
-      >
-        Your current base currency is: {baseCurrency}
-      </Typography>
-      <Divider light />
+      <Title>Your current base currency is:</Title>
       <ContentInfo
         sx={{
           display: 'flex',

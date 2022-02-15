@@ -13,7 +13,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { MainListItems, secondaryListItems } from './MainListItems';
+import { MainListItems } from './MainListItems';
 import CurrencySettings from './CurrencySettings';
 import Copyright from './Copyright';
 import { Routes, Route } from 'react-router-dom';
