@@ -23,6 +23,7 @@ import {
   useRatesLoading,
   getCurrencyRates,
 } from './../../store/slices/rateSlice.js';
+import { useSupportedSymbols } from '../../store/slices/supportedSymbolsSlice';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const ContentInfo = styled('div')({
@@ -34,13 +35,13 @@ const ContentInfo = styled('div')({
 const ExchangeRates = () => {
   const baseCurrency = useSelector(useBaseCurrency);
   const rates = useSelector(useRates);
+  const supportedSymbols = useSelector(useSupportedSymbols);
   const dispatch = useDispatch();
   const loading = useSelector(useRatesLoading);
 
   useEffect(() => {
-    debugger;
     dispatch(getCurrencyRates());
-  }, []);
+  }, [baseCurrency, dispatch]);
 
   if (!(loading.status === 'resolved')) {
     return <CircularProgress sx={{ mx: 'auto' }} />;
@@ -93,7 +94,9 @@ const ExchangeRates = () => {
                 {Object.keys(rates).map(currency => {
                   return (
                     <TableRow key={currency}>
-                      <TableCell align="left">{currency}</TableCell>
+                      <TableCell align="left">
+                        {currency} ({supportedSymbols[currency].description})
+                      </TableCell>
                       <TableCell align="left">{rates[currency]}</TableCell>
                     </TableRow>
                   );

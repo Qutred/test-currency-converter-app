@@ -11,17 +11,10 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getCurrencySymbols,
-  changeBaseCurrency,
-  useBaseCurrency,
-  useSupportedSymbols,
-  useLoading,
-  useRatesLoaded,
-  convertCurrency,
-  useConvertResult,
-} from '../../store/slices/currencySlice';
+import { useBaseCurrency } from './../../store/slices/baseCurrencySlice';
+import { useSupportedSymbols } from './../../store/slices/supportedSymbolsSlice';
 import CircularProgress from '@mui/material/CircularProgress';
+import { convert } from './../../api/currencyApi';
 
 const ContentInfo = styled('div')({
   display: 'flex',
@@ -31,42 +24,82 @@ const ContentInfo = styled('div')({
 });
 
 const CurrencyConverter = () => {
-  const loading = useSelector(useLoading);
-  const amount = useRef(null);
-  const from = useRef(null);
-  const to = useRef(null);
   const baseCurrency = useSelector(useBaseCurrency);
-  const result = useSelector(useConvertResult);
-  const [formData, setFormData] = useState({
-    to: '',
-    from: baseCurrency,
-    amount: 1,
-  });
   const supportedSymbols = useSelector(useSupportedSymbols);
+  const [formData, setFormData] = useState({
+    amount: { value: 1, errorMessage: '' },
+    from: { value: baseCurrency, errorMessage: '' },
+    to: { value: 'EUR', errorMessage: '' },
+  });
+
+  const [loading, setLoading] = useState({
+    status: 'idle',
+    error: '',
+  });
+  const [convertResult, setConvertResult] = useState(null);
 
   const dispatch = useDispatch();
 
-  const handleConvert = () => {
-    dispatch(
-      convertCurrency({
-        from: from.current.value,
-        to: to.current.value,
-        amount: amount.current.value,
-      })
-    );
+  const handleConvert = async () => {
+    if (
+      formData.amount.errorMessage ||
+      formData.from.errorMessage ||
+      formData.to.errorMessage
+    ) {
+      return;
+    }
+
+    try {
+      setLoading(prevState => ({
+        ...prevState,
+        status: 'loading',
+      }));
+
+      let response = await convert({
+        amount: formData.amount.value,
+        to: formData.to.value,
+        from: formData.from.value,
+      });
+      if (!(response.status === 200)) {
+        new Error('Server error');
+      }
+
+      setConvertResult(response.data.result);
+
+      setLoading(prevState => ({
+        ...prevState,
+        status: 'resolved',
+      }));
+    } catch (error) {
+      setLoading(prevState => ({
+        ...prevState,
+        status: 'rejected',
+        error: error.message,
+      }));
+    }
   };
 
   const handleChange = e => {
-    debugger;
-    setFormData(prevFormData => {
-      return { ...prevFormData, [e.target.name]: e.target.value };
-    });
-  };
+    let errorMessage;
+    let { name, value } = e.target;
 
-  const getRandomCurrency = () => {
-    let keys = Object.keys(supportedSymbols);
-    let randomNumber = Math.floor(Math.random() * keys.length);
-    return keys[randomNumber];
+    if (name === 'amount') {
+      errorMessage =
+        Number(value) >= 1 ? '' : 'Amount must be bigger or equal 1';
+    }
+
+    if (name === 'from' || name === 'to') {
+      errorMessage = value === '' ? 'Please Choose some succency' : '';
+    }
+
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [e.target.name]: {
+        ...prevFormData[e.target.name],
+        value: e.target.value,
+        errorMessage: errorMessage,
+      },
+    }));
   };
 
   return (
@@ -82,18 +115,25 @@ const CurrencyConverter = () => {
         </Typography>
         <Divider light />
         <ContentInfo>
-          <TextField
-            id="amount"
-            name="amount"
-            label="Amount"
-            align="center"
-            variant="standard"
-            type="number"
-            inputRef={amount}
-            value={formData.amount}
-            onChange={handleChange}
-            sx={{ mb: '2rem' }}
-          />
+          <FormControl>
+            <TextField
+              error={Boolean(formData.amount.errorMessage)}
+              sx={{ mb: '2rem' }}
+              id="amount"
+              name="amount"
+              label="Amount"
+              align="center"
+              variant="standard"
+              type="number"
+              value={formData.amount.value}
+              onChange={handleChange}
+              helperText={
+                Boolean(formData.amount.errorMessage) &&
+                formData.amount.errorMessage
+              }
+            />
+          </FormControl>
+
           <div>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
               <InputLabel id="from">From</InputLabel>
@@ -102,9 +142,9 @@ const CurrencyConverter = () => {
                 name="from"
                 id="from"
                 label="From"
-                inputRef={from}
-                value={formData.from}
+                value={formData.from.value}
                 onChange={handleChange}
+                error={Boolean(formData.from.errorMessage)}
               >
                 {Object.keys(supportedSymbols).map(currency => {
                   return (
@@ -117,6 +157,7 @@ const CurrencyConverter = () => {
                   );
                 })}
               </Select>
+              <FormHelperText>{formData.from.errorMessage}</FormHelperText>
             </FormControl>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
               <InputLabel id="To">To</InputLabel>
@@ -125,9 +166,9 @@ const CurrencyConverter = () => {
                 name="to"
                 id="to"
                 label="To"
-                inputRef={to}
-                value={formData.to}
+                value={formData.to.value}
                 onChange={handleChange}
+                error={Boolean(formData.to.errorMessage)}
               >
                 {Object.keys(supportedSymbols).map(currency => {
                   return (
@@ -140,13 +181,15 @@ const CurrencyConverter = () => {
                   );
                 })}
               </Select>
+              <FormHelperText>{formData.to.errorMessage}</FormHelperText>
             </FormControl>
           </div>
           <Typography sx={{ mt: '2rem' }}>
+            {loading.status === 'rejected' && `<p>${loading.error}</p>`}
             {loading.status === 'loading' ? (
-              <CircularProgress />
+              <CircularProgress sx={{ max: 'auto' }} />
             ) : (
-              `Result: ${result === null ? '' : result}`
+              convertResult !== null && `Result ${convertResult}`
             )}
           </Typography>
           <Button

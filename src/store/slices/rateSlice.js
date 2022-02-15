@@ -5,7 +5,6 @@ export const getCurrencyRates = createAsyncThunk(
   'rates/getCurrencyRates',
   async (_, { rejectWithValue, getState }) => {
     try {
-      debugger;
       let baseCurrency = getState().base.baseCurrency;
       let response = await getRates(baseCurrency);
       if (!response.status === 200) {

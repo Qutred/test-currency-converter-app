@@ -46,7 +46,6 @@ export const currencySlice = createSlice({
 });
 
 export const useSupportedSymbolsLoading = store => {
-  console.log(store.supportedSymbols.loading);
   return store.supportedSymbols.loading;
 };
 export const useSupportedSymbols = state =>

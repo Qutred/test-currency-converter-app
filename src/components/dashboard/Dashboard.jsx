@@ -174,10 +174,10 @@ function DashboardContent() {
                     <Routes>
                       <Route path="/" element={<EchangeRates />} />
                       <Route path="/settings" element={<CurrencySettings />} />
-                      {/* <Route
+                      <Route
                         path="/currencyConverter"
                         element={<CurrencyConverter />}
-                      /> */}
+                      />
                     </Routes>
                   </Grid>
                 </>
